@@ -89,6 +89,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 	private int tabTextSize = 12;
 	private int tabTextColor = 0xFF666666;
+    private int tabTextColorSelected = 0xFF666666;
 	private Typeface tabTypeface = null;
 	private int tabTypefaceStyle = Typeface.BOLD;
 
@@ -133,6 +134,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 		tabTextSize = a.getDimensionPixelSize(0, tabTextSize);
 		tabTextColor = a.getColor(1, tabTextColor);
+        tabTextColorSelected = tabTextColor;
 
 		a.recycle();
 
@@ -143,6 +145,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 		indicatorColor = a.getColor(R.styleable.PagerSlidingTabStrip_pstsIndicatorColor, indicatorColor);
 		underlineColor = a.getColor(R.styleable.PagerSlidingTabStrip_pstsUnderlineColor, underlineColor);
 		dividerColor = a.getColor(R.styleable.PagerSlidingTabStrip_pstsDividerColor, dividerColor);
+        tabTextColorSelected = a.getColor(R.styleable.PagerSlidingTabStrip_pstsTextColorSelected, tabTextColorSelected);
 		indicatorHeight = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsIndicatorHeight, indicatorHeight);
 		underlineHeight = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsUnderlineHeight, underlineHeight);
 		dividerPadding = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsDividerPadding, dividerPadding);
@@ -291,7 +294,14 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 			return;
 		}
 
-		int newScrollX = tabsContainer.getChildAt(position).getLeft() + offset;
+        for (int i = 0; i < tabsContainer.getChildCount(); i++) {
+            TextView tab = (TextView) tabsContainer.getChildAt(i);
+            tab.setTextColor(tabTextColor);
+        }
+
+        TextView tab = (TextView) tabsContainer.getChildAt(position);
+        tab.setTextColor(tabTextColorSelected);
+        int newScrollX = tab.getLeft() + offset;
 
 		if (position > 0 || offset > 0) {
 			newScrollX -= scrollOffset;
@@ -384,7 +394,6 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 				delegatePageListener.onPageSelected(position);
 			}
 		}
-
 	}
 
 	public void setIndicatorColor(int indicatorColor) {
